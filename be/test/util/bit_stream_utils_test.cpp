@@ -40,13 +40,11 @@
 // Must come before gtest.h.
 #include <gtest/gtest.h>
 
-#include <boost/utility/binary.hpp>
-
+#include "base/string/faststring.h"
 #include "util/bit_packing_default.h"
 #include "util/bit_stream_utils.h"
 #include "util/bit_stream_utils.inline.h"
 #include "util/bit_util.h"
-#include "util/faststring.h"
 
 using std::string;
 using std::vector;
@@ -67,7 +65,7 @@ TEST(TestBitStreamUtil, TestBool) {
         writer.PutValue(i % 2, 1);
     }
     writer.Flush();
-    EXPECT_EQ(buffer[0], BOOST_BINARY(1 0 1 0 1 0 1 0));
+    EXPECT_EQ(buffer[0], 0b10101010);
 
     // Write 00110011
     for (int i = 0; i < 8; ++i) {
@@ -86,8 +84,8 @@ TEST(TestBitStreamUtil, TestBool) {
     writer.Flush();
 
     // Validate the exact bit value
-    EXPECT_EQ(buffer[0], BOOST_BINARY(1 0 1 0 1 0 1 0));
-    EXPECT_EQ(buffer[1], BOOST_BINARY(1 1 0 0 1 1 0 0));
+    EXPECT_EQ(buffer[0], 0b10101010);
+    EXPECT_EQ(buffer[1], 0b11001100);
 
     // Use the reader and validate
     BitReader reader(buffer.data(), buffer.size());
